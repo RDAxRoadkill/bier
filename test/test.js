@@ -19,43 +19,40 @@ describe('Test of de app correct draait', function(){
     })
 });
 
+//Fungeert ook als het testen van een GET functie
 describe('Testen van database connectie', function(){
     it('GET /api/testDB', function(done){
         chai.request(index)
             .get('/api/testDB')
             .end(function (err, res){
                 res.should.have.status(200);
-                res.body.should.be.a('object');
+                res.body.should.be.a('array');
                 done();
         })
     })
 })
-/*
-describe('Het uitvoeren van een GET request', function(){
-    it('GET /api/heineken', function(done){
-        chai.request(index)
-            .get('/api/')
-            .end(function (err, res){
-                res.should.have.satus(200);
-                res.body.should.be.a('object');
-                //controleer iets vanuit het object
-                done();
-            })
-    })
-});
 
 describe('Het uitvoeren van een POST request', function(){
-    it('POST /api/nieuwBier', function(done){
+    //TBA: Test that fails
+    it('should POST a beer', function(done){
+        var bier = {
+            naam: "Geweldig bier",
+            beschrijving: "bieeer",
+            prijs: 1,
+            voorraad: 20
+        }
         chai.request(index)
-            .post('/addNewBeer')
-            .send({
-                bier: "test bier",
-                id: 66666
-            })
+            .post('/api/bier')
+            .send(bier) //je zou hier ook de variabele in kunnen zetten, maar dit is schoner
             .end(function (err, res){
-                expect(res.id).to.equal("66666");
+                res.should.have.status(200);
+                res.body.bier.should.have.property('naam');
+                res.body.bier.should.have.property('beschrijving');
+                res.body.bier.should.have.property('prijs');
+                res.body.bier.should.have.property('voorraad');
+                res.body.should.be.a('object');
+                res.body.should.have.property('message').eql('Bier successvol toegevoegd');
                 done();
             })
     })
 })
-*/

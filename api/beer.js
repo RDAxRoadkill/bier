@@ -19,23 +19,31 @@ Beer.getBeer = function (callback){
             if(err){
                 console.log(err);
             } else {
-                //Een array variabele
-                var beers = [];
-                //Alle SQL (rows) worden in de array gezet. Zo hebben we een JSON variabele
-                for(var i=0;i<rows.length;i++){
-                   beers.push({naam: rows[i].naam});
-                }
+                //controleren van alle waardes in de console. --dev
+                //console.log(rows);
                 //De connectie wordt weer vrijgelaten. .end(); is depricated
                 conn.release();
-
-                /*
-                    We sturen onze array terug als variabele.
-                    Deze kan later gebruikt worden in routes.js
-                */
-                return callback(null, beers);
+                return callback(null, rows);
             }
         })
    })
 } 
+
+Beer.addBeer = function(obj, callback){
+    var query = "INSERT INTO `soorten` VALUES (NULL, ?, ?, ?, ?)";
+    mysql.connection(function (err, conn) {
+        if (err) {
+            return callback(err);
+        }
+        //Al deze obj. variabele komen uit de body. Deze worden dan toegevoegd aan de database.
+        conn.query(query, [obj.naam, obj.beschrijving, obj.prijs, obj.voorraad], function (err, rows) {
+            if (err) {
+                return callback(err,null);
+            } else{
+                return callback(null, rows);
+            }
+        });
+    })
+};
 
 module.exports = Beer;
